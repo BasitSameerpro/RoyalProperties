@@ -14,6 +14,7 @@ import BookingModal from "../../components/BookingModal/BookingModal";
 import UserDetailContext from "../../context/UserDetailContext";
 import { Button } from "@mantine/core";
 import { toast } from "react-toastify";
+import Heart from "../../components/Heart/Heart";
 
 const Property = () => {
   const { pathname } = useLocation();
@@ -38,24 +39,7 @@ const Property = () => {
     const booking = bookings?.find((booking) => booking.propertyId === id);
     setIsBooked(!!booking);
     setBookingDate(booking ? new Date(booking.date).toLocaleDateString() : null);
-
-    // Fetch booking status on component mount and after booking/cancellation
-    const fetchBookingStatus = async () => {
-      try {
-        const response = await api.get(`/user/bookings/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setIsBooked(!!response.data);
-        setBookingDate(response.data?.date ? new Date(response.data.date).toLocaleDateString() : null);
-      } catch (error) {
-        console.error("Error fetching booking status:", error);
-      }
-    };
-
-    fetchBookingStatus();
-  }, [bookings, id, token]);
+  }, [bookings, id]);
 
   const { mutate: cancelBooking, isLoading: cancelling } = useMutation({
     mutationFn: async () => removeBooking(id, user?.email, token),
@@ -96,7 +80,7 @@ const Property = () => {
       <div className="flexColStart paddings innerWidth property-container">
         {/* like Button */}
         <div className="like">
-          <AiFillHeart size={24} color="white" />
+          <Heart id={id}/>
         </div>
         <img src={data?.image} alt="home image" />
 

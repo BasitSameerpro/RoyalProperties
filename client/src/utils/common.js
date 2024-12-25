@@ -23,3 +23,12 @@ export const sliderSettings = {
   },
 
 };
+
+
+export const updateFavourities=(id,favourities)=>{
+  if(favourities.includes(id)){
+    return favourities.filter((resId)=>resId!==id)
+  } else{
+  return [...favourities,id]
+  }
+}
