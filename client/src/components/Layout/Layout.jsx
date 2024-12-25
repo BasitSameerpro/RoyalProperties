@@ -27,14 +27,13 @@ const Layout = () => {
 
       const res = await getAccessTokenWithPopup({
         authorizationParams: {
-          audience: "http://localhost:8000",
+          audience: "https://summerkhan0.us.auth0.com/api/v2/",
           scope: "openid profile email",
         },
       });
       localStorage.setItem("access_token", res);
       setUserDetails((prev) => ({ ...prev, token: res }));
-      console.log(res);
-      // mutate(res)
+      mutate(res);
     };
 
 
