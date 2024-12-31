@@ -18,7 +18,8 @@ const Header = () => {
       <div className="flexCenter innerWidth paddings h-container">
         {/* logo */}
         <Link to='/'>
-          <img src="./logo.png" alt="logo" width={100} />
+          <h2 className="special-font">Royal Properties</h2>
+          {/* <img src="./logo4.png" alt="logo" width={100} /> */}
         </Link>
         {/* menu */}
         <OutsideClickHandler

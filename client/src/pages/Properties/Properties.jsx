@@ -30,7 +30,6 @@ const Properties = () => {
     <div>
       <div className="wrapper">
         <div className="FlexColCenter paddings innerWidth properties-container">
-          <SearchBar />
 
           <div className="paddings flexCenter properties">
           {
