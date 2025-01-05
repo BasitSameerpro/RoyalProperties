@@ -22,7 +22,7 @@
   "overrides": {
     "express-oauth2-jwt-bearer": {
       "engines": {
-        "node": ">=20.2.0"
+        "node": "22.12.0"
       }
     }
   }
