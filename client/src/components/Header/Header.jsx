@@ -33,7 +33,7 @@ const Header = () => {
             style={getMenuStyles(menuOpened)}
           >
               <NavLink to="/properties">Properties</NavLink>
-              <a href="mailto:zainkeepscode@gmail.com">Contact</a>
+              <a href="mailto:summerkhan054@gmail.com">Contact</a>
               {
                 !isAuthenticated ? (
                   <button className="button" onClick={loginWithRedirect}>
