@@ -1,31 +1,17 @@
-import React, { useContext, useState } from "react";
-import { Modal, Button } from "@mantine/core";
-import { DatePicker } from "@mantine/dates";
-import UserDetailContext from "../../context/UserDetailContext.js";
-import "@mantine/dates/styles.css";
+import React, { useState, useContext } from "react";
+import { Modal, Button, DatePicker } from "@mantine/core";
 import { useMutation } from "react-query";
 import { toast } from "react-toastify";
-import { bookVisit } from "../../utils/api"; // Import bookVisit function
+import { useAuth0 } from "@auth0/auth0-react";
+import UserDetailContext from "../../context/UserDetailContext";
+import { bookVisit } from "../../utils/api";
 
-const BookingModal = ({ opened, setOpened, email, propertyId }) => {
+const BookingModal = ({ opened, setOpened, propertyId }) => {
   const [value, setValue] = useState(null);
+  const { user, isAuthenticated } = useAuth0();
   const { userDetails, setUserDetails } = useContext(UserDetailContext);
-  const token = userDetails?.token;
-
-  const handleBooking = () => {
-    if (!token) {
-      toast.error("Please login to book a visit");
-      return;
-    }
-    if (!value) {
-      toast.error("Please select a date");
-      return;
-    }
-    mutate();
-  };
 
   const handleBookingSuccess = () => {
-    toast.success("Visit booked successfully");
     setUserDetails((prev) => ({
       ...prev,
       bookings: [...(prev.bookings || []), { propertyId, date: value.toISOString() }]
@@ -36,7 +22,7 @@ const BookingModal = ({ opened, setOpened, email, propertyId }) => {
   const { mutate, isLoading } = useMutation({
     mutationFn: async () => {
       try {
-        return await bookVisit(propertyId, email, token, value);
+        return await bookVisit(propertyId, user.email, value);
       } catch (error) {
         console.error("Booking visit error:", error.response?.data || error.message);
         throw error;
@@ -45,9 +31,16 @@ const BookingModal = ({ opened, setOpened, email, propertyId }) => {
     onSuccess: handleBookingSuccess,
     onError: (error) => {
       toast.error("Residency already booked");
-      
     }
   });
+
+  const handleBooking = () => {
+    if (!isAuthenticated) {
+      toast.error("Please login to book a visit");
+      return;
+    }
+    mutate();
+  };
 
   return (
     <Modal
@@ -61,7 +54,6 @@ const BookingModal = ({ opened, setOpened, email, propertyId }) => {
         <Button 
           disabled={!value || isLoading} 
           onClick={handleBooking}
-          loading={isLoading}
         >
           Book Visit
         </Button>
