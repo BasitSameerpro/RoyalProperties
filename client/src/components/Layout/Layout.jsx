@@ -10,35 +10,34 @@ import { createUser } from "../../utils/api";
 // import useBookings from "../../hooks/useBookings";
 
 const Layout = () => {
-  const { isAuthenticated, user, loginWithPopup, getAccessTokenSilently } = useAuth0();
-  const { setUserDetails } = useContext(UserDetailContext);
 
+  // useFavourites()
+  // useBookings()
+
+  const { isAuthenticated, user, getAccessTokenWithPopup } = useAuth0();
+  const { setUserDetails } = useContext(UserDetailContext);
+ 
   const { mutate } = useMutation({
     mutationKey: [user?.email],
     mutationFn: (token) => createUser(user?.email, token),
   });
 
   useEffect(() => {
-    const getTokenAndRegister = async () => {
-      try {
-        await loginWithPopup({
-          authorizationParams: {
-            audience: "https://summerkhan0.us.auth0.com/api/v2/",
-            scope: "openid profile email",
-          },
-        });
-        const token = await getAccessTokenSilently();
-        localStorage.setItem("access_token", token);
-        setUserDetails((prev) => ({ ...prev, token }));
-        mutate(token);
-      } catch (error) {
-        console.error("Error during authentication", error);
-      }
+    const getTokenAndRegsiter = async () => {
+
+      const res = await getAccessTokenWithPopup({
+        authorizationParams: {
+          audience: "https://summerkhan0.us.auth0.com/api/v2/",
+          scope: "openid profile email",
+        },
+      });
+      localStorage.setItem("access_token", res);
+      setUserDetails((prev) => ({ ...prev, token: res }));
+      mutate(res);
     };
 
-    if (isAuthenticated) {
-      getTokenAndRegister();
-    }
+
+    isAuthenticated && getTokenAndRegsiter();
   }, [isAuthenticated]);
 
   return (
